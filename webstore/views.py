@@ -287,3 +287,11 @@ def checkout(request,pk):
 def thanks(request):
     return render(request,'thanks.html',{})
 
+@login_required(login_url='login')
+def my_orders(request,pk):
+    print(list(Order.objects.filter(client=request.user)))
+    orders = Order.objects.filter(client=request.user)
+    return render(request,'myorders.html',{
+        'orders':orders,
+    })
+
