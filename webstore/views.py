@@ -149,3 +149,8 @@ def add_product(request):
     messages.success(request,f"Libro {request.POST['name']} agregado correctamente")
     return redirect('home')
 
+@login_required(login_url='login')
+def del_product(request,pk):
+    Product.objects.filter(pk=pk).delete()
+    return redirect('apanel')
+
