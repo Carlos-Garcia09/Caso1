@@ -16,4 +16,5 @@ urlpatterns = [
     path('cart/<str:pk>/',views.cart, name='cart'),
     path('payment/',views.payment, name='payment'),
     path('thanks/',views.thanks, name='thanks'),
+    path('myorders/<str:pk>',views.my_orders, name='my_orders'),
 ]
