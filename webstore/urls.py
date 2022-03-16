@@ -19,4 +19,5 @@ urlpatterns = [
     path('myorders/<str:pk>',views.my_orders, name='my_orders'),
     path('status/',views.status, name='status'),
     path('ustatus/',views.update_status, name='update_status'),
+    path('stats/',views.stats, name='stats'),
 ]
