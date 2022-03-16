@@ -154,3 +154,19 @@ def del_product(request,pk):
     Product.objects.filter(pk=pk).delete()
     return redirect('apanel')
 
+@login_required(login_url='login')
+def search(request):
+    if request.method == 'POST':
+        searched = request.POST['searched']
+        products = Product.objects.filter(name__contains=searched)
+        context = {
+            'products':products,
+            'item_searched':searched,
+            'flag':len(products),
+        }
+        return render(request,'search.html',context)
+    else:
+        products = Product.objects.all()
+        context = {'products':products}
+        return render(request,'search.html',context)
+
