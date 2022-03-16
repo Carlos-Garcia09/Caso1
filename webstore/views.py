@@ -295,3 +295,19 @@ def my_orders(request,pk):
         'orders':orders,
     })
 
+@login_required(login_url='login')
+def status(request):
+    if request.user.is_superuser:
+        orders = Order.objects.all().exclude(status="Entregado")
+        role = "Superusuario"
+    else:
+        role = Client.objects.get(user=User.objects.get(pk=request.user.id)).publisher
+        orders = Order.objects.filter(publisher=role).exclude(status="Entregado")
+    return render(request,'status.html',{'orders':orders,'role':role})
+
+@login_required(login_url='login')
+def update_status(request):
+    order = Order.objects.get(pk=request.POST['id'])
+    order.status = str(request.POST['status'])
+    order.save()
+    return redirect('status')
