@@ -1,0 +1,134 @@
+{% load static %}
+
+<!doctype html>
+<html lang="es">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="{% static '/main.css' %}">
+
+    <title>Tienda de libros</title>
+
+</head>
+<body>
+    <br>
+    <br>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" style="margin-left: 15px;">Librería</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/apanel">Gestionar libros</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/status">Estatus de ordenes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/stats">Estadísticas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Panel de administrador ({{ role }})</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="container">
+        <br>
+        <form method="POST" action="{% url 'addproduct' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h1>Agregar libro</h1>
+            <hr>
+            <div class="form-group">
+                <h4>Título</h4>
+                <input type="text" class="form-control" placeholder="Título del libro" value="{{ name }}" name="name">
+            </div>
+            <div class="form-group">
+                <h4>Autor</h4>
+                <input type="text" class="form-control" placeholder="Autor del libro" value="{{ author }}" name="author">
+            </div>
+            {% if request.user.is_superuser %}
+                <div class="form-group">
+                    <h4>Editorial</h4>
+                    <input type="text" class="form-control" placeholder="Editorial del libro" value="{{ publisher }}" name="publisher">
+                </div>
+            {% endif %}
+            <div class="form-group">
+                <h4>Género</h4>
+                <select class="form-select" name="genre" value="{{ genre }}">
+                    <option value="Fantasía">Fantasía</option>
+                    <option value="Ficción">Ficción</option>
+                    <option value="Terror">Terror</option>
+                    <option value="Literatura Clasica">Literatura Clasica</option>
+                    <option value="Drama">Drama</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <h4>Precio del libro</h4>
+                <input type="number" class="form-control" placeholder="(Por unidad)" value="{{ price }}" name="price">
+            </div>
+            <div class="form-group">
+                <h4>Descripción</h4>
+                <input type="text" class="form-control" placeholder="Breve descripción del libro" value="{{ description }}" name="description">
+            </div>
+            <div class="form-group">
+                <h4>Piezas disponibles</h4>
+                <input type="number" class="form-control" placeholder="Cantidad de libros disponible" value="{{ quantity }}" name="quantity">
+            </div>
+            <div class="form-group">
+                <h4>Imagen (640px x 360px)</h4>
+                <input required type="file" class="form-control" placeholder="Imagen del prodcuto" name="image" value="{{ image }}">
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Agregar</button>
+        </form>
+    </div>
+    <hr>
+
+    <div class="container">
+        <br>
+        {% for product in products %}
+            <h6><strong>{{product.name}}</strong></h6>
+            <input type="hidden" name="item_id" value="{{ product.id }}">
+            <a class="btn btn-outline-danger" href="/delp/{{ product.id }}">Eliminar</a>
+            <hr>
+        {% endfor %}
+    </div>
+    <br>
+
+
+    <style>
+        .admin-panel{
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+    </style>
+    <div class="admin-panel">
+        <a href="{% url 'home' %}" class="btn btn-primary">Regresar</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+</body>
+</html>
