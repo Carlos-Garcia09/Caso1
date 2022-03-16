@@ -97,3 +97,55 @@ def product_page(request,pk):
         'flag':len(sug)
     }
     return render(request,'product.html',context)
+
+@login_required(login_url='login')
+def add_product(request):
+    if request.method == 'POST':
+        form = addProductForm(request.POST or None)
+        image = request.FILES.get('image')
+        if form.is_valid():
+            if request.user.is_superuser:
+                publisher = request.POST['publisher']
+            else:
+                publisher = Client.objects.get(user=User.objects.get(pk=request.user.id)).publisher
+
+            p = Product.objects.create(
+                name = request.POST['name'],
+                author = request.POST['author'],
+                publisher = publisher,
+                price = request.POST['price'],
+                description = request.POST['description'],
+                quantity = request.POST['quantity'],
+                image = image,
+                genre = request.POST['genre']
+            )
+        else:
+            if request.user.is_superuser:
+                role = "Superusuario"
+                products = Product.objects.all()
+            else:
+                role = Client.objects.get(user=User.objects.get(pk=request.user.id)).publisher
+                products = Product.objects.filter(publisher=role)
+            name = request.POST['name']
+            author = request.POST['author']
+            publisher = request.POST['publisher']
+            price = request.POST['price']
+            description = request.POST['description']
+            quantity = request.POST['quantity']
+            genre = request.POST['genre']
+            messages.success(request,"Ocurrió un error; Por favor, intenta de nuevo...")
+            return render(request,'apanel.html',{
+                'name':name,
+                'author':author,
+                'publisher':publisher,
+                'price':price,
+                'description':description,
+                'quantity':quantity,
+                'image':image,
+                'genre':genre,
+                'role': role,
+                'products':products,
+            })
+    messages.success(request,f"Libro {request.POST['name']} agregado correctamente")
+    return redirect('home')
+
