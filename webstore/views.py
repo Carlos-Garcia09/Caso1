@@ -86,3 +86,14 @@ def apanel(request):
         return render(request,'apanel.html',context)
     else:
         return redirect('home')
+    
+    @login_required(login_url='login')
+def product_page(request,pk):
+    product = Product.objects.get(pk=int(request.path.split('/')[2]))
+    sug = Product.objects.filter(genre=product.genre).exclude(pk=pk)
+    context = {
+        'product':product,
+        'sug':sug,
+        'flag':len(sug)
+    }
+    return render(request,'product.html',context)
