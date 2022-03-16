@@ -69,3 +69,20 @@ def register(request):
         return render(request,'register.html',context)
 
 @login_required(login_url='login')
+
+@login_required(login_url='login')
+def apanel(request):
+    if request.user.is_staff:
+        if request.user.is_superuser:
+            role = "Superusuario"
+            products = Product.objects.all()
+        else:
+            role = Client.objects.get(user=User.objects.get(pk=request.user.id)).publisher
+            products = Product.objects.filter(publisher=role)
+        context = {
+            'role':role,
+            'products':products,
+        }
+        return render(request,'apanel.html',context)
+    else:
+        return redirect('home')
