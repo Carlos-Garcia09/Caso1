@@ -283,3 +283,7 @@ def checkout(request,pk):
     }
     return render(request,'checkout.html',context)
 
+@login_required(login_url='login')
+def thanks(request):
+    return render(request,'thanks.html',{})
+
