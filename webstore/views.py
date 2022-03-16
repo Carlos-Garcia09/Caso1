@@ -9,10 +9,16 @@ from django.db.models import Count
 
 # Create your views here.
 
+@login_required(login_url='guest')
 def home(request):
     products = Product.objects.all()
     context = {'products':products}
     return render(request,'home.html',context)
+
+def guest(request):
+    products = Product.objects.all()
+    context = {'products':products}
+    return render(request,'guest.html',context)
 
 def user_login(request):
     if request.user.is_authenticated:
