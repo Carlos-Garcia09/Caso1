@@ -326,3 +326,9 @@ def stats(request):
             'sells':sells,
             'finished':finished,
             })
+def best(request):
+    product = Product.objects.order_by('selled')
+    product = list(product)[-1]
+    return render(request,'best.html',{'product':product})    
+    
+    
