@@ -13,4 +13,6 @@ urlpatterns = [
     path('delp/<str:pk>',views.del_product, name='del_product'),
     path('search/',views.search, name='search'),
     path('checkout/<str:pk>',views.checkout, name='checkout'),
+    path('cart/<str:pk>/',views.cart, name='cart'),
+    path('payment/',views.payment, name='payment'),
 ]
